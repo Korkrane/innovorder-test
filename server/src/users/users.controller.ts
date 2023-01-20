@@ -35,7 +35,7 @@ export default class PostsController {
   @ApiBody({ type: UpdateUserDto })
   @ApiOperation({ summary: 'Update a user' })
   async replacePost(@Param('id') id: string, @Body() post: UpdateUserDto) {
-    return this.postsService.replacePost(Number(id), post);
+    return this.postsService.updatePost(Number(id), post);
   }
 
   @Delete(':id')

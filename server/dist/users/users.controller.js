@@ -31,7 +31,7 @@ let PostsController = class PostsController {
         return this.postsService.createPost(post);
     }
     async replacePost(id, post) {
-        return this.postsService.replacePost(Number(id), post);
+        return this.postsService.updatePost(Number(id), post);
     }
     async deletePost(id) {
         this.postsService.deletePost(Number(id));
