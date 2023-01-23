@@ -6,8 +6,8 @@ export class User {
   public id: number;
 
   @Column()
-  public title: string;
+  public login: string;
 
   @Column()
-  public content: string;
+  public password: string;
 }

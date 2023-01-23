@@ -5,9 +5,9 @@ export class UpdateUserDto {
   @ApiProperty({ description: 'ID of updated user', example: '1' })
   id: number;
 
-  @ApiProperty({ description: 'Content of post', example: 'this test is updated' })
-  content: string;
+  @ApiProperty({ description: 'User login', example: 'admin' })
+  login: string;
 
-  @ApiProperty({ description: 'Title of post', example: 'Update test' })
-  title: string;
+  @ApiProperty({ description: 'User password', example: 'admin' })
+  password: string;
 }
