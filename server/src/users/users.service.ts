@@ -5,6 +5,8 @@ import {User} from './user.entity';
 import {UpdateUserDto} from './dto/updateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export default class UsersService {
@@ -26,6 +28,15 @@ export default class UsersService {
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
+  async getUserByLogin(login: string) {
+  const user = await this.usersRepository.findOne({where: {login:login}});
+    if (user) {
+      return user;
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
+
   async updateUser(id: number, user: UpdateUserDto) {
     await this.usersRepository.update(id, user);
     const updatedUser = await this.usersRepository.findOne({where: {id:id}});
@@ -35,8 +46,18 @@ export default class UsersService {
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
+  async hashPassword(password: string) {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+  };
+
+  generateToken(user: User) {
+  return jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+  };
+
   async createUser(user: CreateUserDto) {
-    const newUser = await this.usersRepository.create(user);
+    const hashedPassword = await this.hashPassword(user.password);
+    const newUser = await this.usersRepository.create({ ...user, password: hashedPassword });
     await this.usersRepository.save(newUser);
     return newUser;
   }
