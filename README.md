@@ -11,8 +11,8 @@ The following table shows an overview of the existing API routes:
 - GET     `users/:id`         get User by id
 - POST    `users`             add new User
 - POST    `users/login`       login to get acces to `/GET users` and `/GET products:code`
-- PUT     `chicken/:id`       update User by id
-- DELETE  `chicken/:id`       remove User by id
+- PUT     `users/:id`       update User by id
+- DELETE  `users/:id`       remove User by id
 
 - GET     `products/:code`    get product by it's code
 
