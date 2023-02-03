@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('InnovOrder technical test')
     .setDescription('InnovOrder technical test API description')
     .setVersion('1.0')
-    .addTag('innovorder')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   const document = SwaggerModule.createDocument(app, config);

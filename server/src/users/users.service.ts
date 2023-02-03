@@ -16,7 +16,6 @@ export default class UsersService {
   ) {}
 
   getAllUsers() {
-    console.log('test get all users');
     return this.usersRepository.find();
   }
 
@@ -36,9 +35,9 @@ export default class UsersService {
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-
   async updateUser(id: number, user: UpdateUserDto) {
-    await this.usersRepository.update(id, user);
+    const hashedPassword = await this.hashPassword(user.password);
+    await this.usersRepository.update(id, {...user,  password: hashedPassword});
     const updatedUser = await this.usersRepository.findOne({where: {id:id}});
     if (updatedUser) {
       return updatedUser
@@ -56,6 +55,10 @@ export default class UsersService {
   };
 
   async createUser(user: CreateUserDto) {
+    const duplicateUser = await this.usersRepository.findOne({where: {login:user.login}});
+    if(duplicateUser)
+      throw new HttpException(`User with that login already exist`, HttpStatus.CONFLICT);
+
     const hashedPassword = await this.hashPassword(user.password);
     const newUser = await this.usersRepository.create({ ...user, password: hashedPassword });
     await this.usersRepository.save(newUser);

@@ -1,15 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn,  } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Column, Entity, PrimaryGeneratedColumn,  } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  public id: number;
+  id: number;
 
   @Column({ unique: true })
-  public login: string;
+  login: string;
 
   @Column()
   @Exclude()
-  public password: string;
+  password: string;
+
+  constructor(partial: Partial<User>) {
+  Object.assign(this, partial);
+  }
 }

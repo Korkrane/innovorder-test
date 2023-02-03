@@ -1,5 +1,5 @@
 
-import { Body, Controller, Delete, Get, Param, Post, Put, Res, Session, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Res, Session, UseGuards, UseInterceptors } from '@nestjs/common';
 import UsersService from './users.service';
 import {CreateUserDto} from './dto/createUser.dto';
 import {UpdateUserDto} from './dto/updateUser.dto';
@@ -16,6 +16,7 @@ export default class UsersController {
   ) {}
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Retrieve data of all users' })
@@ -30,6 +31,7 @@ export default class UsersController {
   }
 
   @Post()
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Create a user' })
   @ApiBody({ type: CreateUserDto })
   async createUser(@Body() user: CreateUserDto) {
@@ -37,6 +39,7 @@ export default class UsersController {
   }
 
   @Put(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiBody({ type: UpdateUserDto })
   @ApiOperation({ summary: 'Update a user' })
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
@@ -50,6 +53,7 @@ export default class UsersController {
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Login to the app' })
   async login(  @Body() loginData: CreateUserDto) {
     const user = await this.usersService.getUserByLogin(loginData.login);
     if (!user)
@@ -60,11 +64,6 @@ export default class UsersController {
 
     const token =  this.usersService.generateToken(user);
     return { token: token };
-    // console.log(token);
-    // res.session.auth = token;
-    // // res.cookie('auth', token, { httpOnly: true });
-    // // console.log(res);
-    // return res.send({ success: true });
   }
 
 }
